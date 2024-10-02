@@ -32,7 +32,7 @@ func OnTextHandle(context tg.Context) error {
 	log.Printf("<-- [%s]: %s", context.Sender().Username, msg)
 	switch {
 	// команда Get для получения
-	case hasPrefix(msg, "get"):
+	case hasPrefixIgnoreCase(msg, "get"):
 		{
 			_ = context.Send("Получение информации.")
 			data := service.GetGitWorkflowResult(config)
@@ -42,7 +42,7 @@ func OnTextHandle(context tg.Context) error {
 			_ = context.Send(fmt.Sprintf(data), tg.ModeHTML)
 		}
 	// команда New для генерации
-	case hasPrefix(msg, "new"):
+	case hasPrefixIgnoreCase(msg, "new"):
 		{
 			count := getN(msg)
 			data := service.TriggerWorkflow(count, config)
@@ -92,6 +92,6 @@ func getN(msg string) string {
 	return "1"
 }
 
-func hasPrefix(s, prefix string) bool {
+func hasPrefixIgnoreCase(s, prefix string) bool {
 	return len(s) >= len(prefix) && strings.EqualFold(s[0:len(prefix)], prefix)
 }
