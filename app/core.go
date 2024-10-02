@@ -34,9 +34,14 @@ func OnTextHandle(context tg.Context) error {
 	// команда Get для получения
 	case hasPrefixIgnoreCase(msg, "get"):
 		{
-			_ = context.Send("Получение информации.")
-			data := service.GetGitWorkflowResult(config)
+			_ = context.Notify(tg.FindingLocation)
+			time.Sleep(5 * time.Second)
+			_ = context.Notify(tg.RecordingVideo)
+			time.Sleep(5 * time.Second)
+			_ = context.Notify(tg.ChoosingSticker)
+			time.Sleep(5 * time.Second)
 
+			data := service.GetGitWorkflowResult(config)
 			data = formatJson(data)
 
 			_ = context.Send(fmt.Sprintf(data), tg.ModeHTML)
@@ -44,6 +49,7 @@ func OnTextHandle(context tg.Context) error {
 	// команда New для генерации
 	case hasPrefixIgnoreCase(msg, "new"):
 		{
+			_ = context.Send(tg.Typing)
 			count := getN(msg)
 			data := service.TriggerWorkflow(count, config)
 			err := context.Send(fmt.Sprintf(data))
@@ -63,6 +69,7 @@ func formatJson(jsonData string) string {
 	formattedJSON = strings.ReplaceAll(formattedJSON, "{", "")
 	formattedJSON = strings.ReplaceAll(formattedJSON, "}", "")
 	formattedJSON = strings.ReplaceAll(formattedJSON, "\"", "")
+	formattedJSON = strings.ReplaceAll(formattedJSON, ",", "")
 
 	lines := strings.Split(formattedJSON, "\n")
 	var result []string
